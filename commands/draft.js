@@ -12,7 +12,10 @@ const command = new SlashCommandBuilder()
 
 async function execute(interaction){
     const playerCount = interaction.options.getInteger('playerCount')
-    const draftPool = generatePool((playerCount || 4));
+    if(!playerCount || playerCount < 4){
+        playerCount = 4;
+    }
+    const draftPool = generatePool(playerCount);
     let message = "__**Advanced Setup Draft**__\n";
     for(const faction of draftPool){
         message += `- **${faction}**\n`;
