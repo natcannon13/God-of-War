@@ -49,7 +49,7 @@ async function execute(interaction){
     player5 = player5.id;
     players.push(player5);
    }
-   const response = await schedule_manager.scheduleGame(interaction.guildId, interaction.channelId, time, players)
+   const response = await schedule_manager.scheduleGame(interaction.guildId, interaction.channel, time, players)
    return interaction.reply(response);
 }
 
