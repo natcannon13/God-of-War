@@ -18,6 +18,7 @@ const ScheduledGame = require('./ScheduledGame');
         ${game.toString()}`
         } catch (err){
             console.error(err);
+            return (err);
         }
     }
 
@@ -40,14 +41,17 @@ const ScheduledGame = require('./ScheduledGame');
     }
 
     async function cancel(id){
-        let found = await findGame(id);
-        if(!found){
+        let game = await findGame(id);
+        if(!game){
             return "No game found with that ID!";
         }
         else{
             try{
                 await DatabaseManager.deleteGame(id);
-                return `Game Canceled!`
+                return {
+                    message: `Game Canceled!`,
+                    info: toGameObject(game).toString()
+                }
             }
             catch(err){
                 console.error(err);

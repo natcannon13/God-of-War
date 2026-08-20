@@ -75,6 +75,9 @@ class DatabaseManager{
     
 
     async scheduleGame(game){
+        if(this.checkDuplicates(game.time, game.players)){
+            throw("This game is already scheduled!");
+        }
         try{
             await this.client.connect();
             await this.client.db("root-scheduling").collection("matches").insertOne(game);
