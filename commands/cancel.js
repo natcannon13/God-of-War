@@ -1,5 +1,4 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {generatePool} = require("../draft/draft_generator.js");
 const schedule_manager = require("../schedule/schedule_manager.js");
 
 const command = new SlashCommandBuilder()

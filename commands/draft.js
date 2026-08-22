@@ -11,7 +11,7 @@ const command = new SlashCommandBuilder()
     );
 
 async function execute(interaction){
-    const playerCount = interaction.options.getInteger('playerCount')
+    let playerCount = interaction.options.getInteger('playerCount')
     if(!playerCount || playerCount < 4){
         playerCount = 4;
     }

@@ -8,14 +8,14 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 client.on('clientReady', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  client.user.setPresence({
+  /*client.user.setPresence({
     activities: [{
       name: "/help message",
       type: ActivityType.Custom,
       state: "Use /help to see commands"
     }],
     status: 'online'
-  });
+  });*/
 });
 
 client.commands = new Collection();
