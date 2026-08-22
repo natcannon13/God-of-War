@@ -26,7 +26,10 @@ async function execute(interaction){
    const modRole = interaction.options.getRole('modrole');
    const videoChannel = interaction.options.getChannel('videochannel');
    let configString = await config_util.saveConfig(interaction.guildId, outputChannel.id, modRole.id, videoChannel.id);
-   return interaction.reply("Config saved" + configString);
+   return interaction.reply({
+    content: "Config saved" + configString,
+    allowedMentions: {roles: []}
+    });
 }
 
 module.exports = {

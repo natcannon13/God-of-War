@@ -1,6 +1,5 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const {uri} = require('../config.json');
-const { config } = require('dotenv');
 
 class DatabaseManager{
     constructor(){
@@ -134,16 +133,17 @@ class DatabaseManager{
     }
 
     async getConfig(guildId){
+        let guildConfig = null;
         try{
             await this.client.connect();
-            const config = await this.client.db("root-scheduling").collection("server-config").findOne({_id: guildId});
+            guildConfig = await this.client.db("root-scheduling").collection("server-config").findOne({_id: guildId});
         }
         catch(err){
             console.error(err);
         }
         finally{
             await this.client.close();
-            return config;
+            return guildConfig;
         }
     }
     

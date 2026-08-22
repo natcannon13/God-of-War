@@ -45,17 +45,37 @@ async function saveConfig(guildId, outputChannel, modRole, videoChannel) {
 
 async function loadConfig(guildId) {
     const jsonData = await DatabaseManager.getConfig(guildId);
-    console.log(jsonData);
+    console.log("json data" + jsonData);
+    if(!jsonData){
+        return null;
+    }
     const loadedConfig = Object.assign(new Config(), jsonData);
+    console.log("loaded config from db" + loadedConfig);
     configMap.set(guildId, loadedConfig);
     return loadedConfig;
 }
 
 async function getConfig(guildId){
-    let 
+    //loads config into Map if not already loaded
+    let guildConfig = configMap.get(guildId);
+    console.log("guild config pre load" + guildConfig);
+    if(guildConfig){
+        return guildConfig;
+    }
+    guildConfig = await loadConfig(guildId);
+    console.log("guild config post load" + guildConfig);
+    return guildConfig;
+}
+
+async function displayConfig(guildId){
+    let guildConfig = await getConfig(guildId);
+    if(guildConfig){
+        return guildConfig.toString();
+    }
+    return null;
 }
 
 
 module.exports = {
-    Config, saveConfig, loadConfig, getConfig
+    Config, saveConfig, loadConfig, getConfig, displayConfig
 }
