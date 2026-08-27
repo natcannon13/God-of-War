@@ -16,5 +16,7 @@ class ScheduledGame{
     Players: <@${this.players[0]}>, <@${this.players[1]}>, <@${this.players[2]}>, <@${this.players[3]}>${this.players[4] ? ', <@' + this.players[4] + '>' : ''}
         `;
     }
+
+    
 }
 module.exports = ScheduledGame;

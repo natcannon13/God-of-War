@@ -13,8 +13,8 @@ const command = new SlashCommandBuilder()
 
 async function execute(interaction){
    const id = interaction.options.getString('id');
-   const response = await schedule_manager.cancel(id);
-   return interaction.reply(response.message);
+   const response = await schedule_manager.cancel(interaction.member, id);
+   return interaction.reply(response);
 }
 
 module.exports = {

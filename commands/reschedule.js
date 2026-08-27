@@ -20,7 +20,7 @@ const command = new SlashCommandBuilder()
 async function execute(interaction){
    const id = interaction.options.getString('id');
    const time = interaction.options.getInteger('time');
-   const response = await schedule_manager.reschedule(id, time);
+   const response = await schedule_manager.reschedule(interaction.member, id, time);
    return interaction.reply(response);
 }
 

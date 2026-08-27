@@ -22,6 +22,9 @@ const command = new SlashCommandBuilder()
     ;
 
 async function execute(interaction){
+    if(!interaction.member.permissions.has("Administrator")){
+        return interaction.reply("You must be an administrator to use this command!");
+    }
    const outputChannel = interaction.options.getChannel('outputchannel');
    const modRole = interaction.options.getRole('modrole');
    const videoChannel = interaction.options.getChannel('videochannel');

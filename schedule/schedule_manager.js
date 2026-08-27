@@ -1,8 +1,9 @@
 const {generateId} = require('../utils/id_util');
 const DatabaseManager = require('../database/DatabaseManager');
 const ScheduledGame = require('./ScheduledGame');
+const { isMod, isInGame } = require('../utils/permissions_util');
 
-    async function scheduleGame(guildId, channel, time, players){
+    async function scheduleGame(user, guildId, channel, time, players){
         let id = "";
         if(channel.isThread()){
             id = channel.name;
@@ -10,7 +11,9 @@ const ScheduledGame = require('./ScheduledGame');
         else{
             id = generateId();
         }
-
+        if(!(await isMod(guildId, user)) && !isInGame(user.id, players)){
+            return "Only moderators can schedule games they are not in."
+        }
         try{
             let game = new ScheduledGame(id, channel.id, guildId, time, players);
             await DatabaseManager.scheduleGame(game);
@@ -22,10 +25,13 @@ const ScheduledGame = require('./ScheduledGame');
         }
     }
 
-    async function reschedule(id, time){
+    async function reschedule(user, id, time){
         let found = await findGame(id);
         if(!found){
             return "No game found with that ID!";
+        }
+        if(!await isMod(found.guildId, user) && !isInGame(user.id, found.players)){
+            return "Only moderators can reschedule games they are not in."
         }
         else{
             try{
@@ -40,18 +46,18 @@ const ScheduledGame = require('./ScheduledGame');
         }
     }
 
-    async function cancel(id){
+    async function cancel(user, id){
         let game = await findGame(id);
         if(!game){
             return "No game found with that ID!";
         }
+        if(!await isMod(game.guildId, user) && !isInGame(user.id, game.players)){
+            return "Only moderators can cancel games they are not in."
+        }
         else{
             try{
                 await DatabaseManager.deleteGame(id);
-                return {
-                    message: `Game Canceled!`,
-                    info: toGameObject(game).toString()
-                }
+                return `Game Canceled!` + toGameObject(game).toString();
             }
             catch(err){
                 console.error(err);
@@ -69,6 +75,10 @@ const ScheduledGame = require('./ScheduledGame');
             console.error(err);
             return "There was an error finding that game.";
         }
+    }
+
+    async function checkPermissions(user){
+
     }
 
     async function getGames(guildId){

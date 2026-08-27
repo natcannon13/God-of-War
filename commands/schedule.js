@@ -1,6 +1,7 @@
 const {SlashCommandBuilder} = require('discord.js');
 const {generatePool} = require("../draft/draft_generator.js");
 const schedule_manager = require("../schedule/schedule_manager.js");
+const { isInGame, isMod } = require('../utils/permissions_util.js');
 
 const command = new SlashCommandBuilder()
     .setName('schedule')
@@ -49,7 +50,7 @@ async function execute(interaction){
     player5 = player5.id;
     players.push(player5);
    }
-   const response = await schedule_manager.scheduleGame(interaction.guildId, interaction.channel, time, players)
+   const response = await schedule_manager.scheduleGame(interaction.member, interaction.guildId, interaction.channel, time, players)
    return interaction.reply(response);
 }
 
