@@ -82,12 +82,18 @@ const { isMod, isInGame } = require('../utils/permissions_util');
         }
     }
 
-    async function checkPermissions(user){
-
-    }
-
-    async function getGames(guildId){
-
+    async function getSchedule(guildId, playerId){
+        let games = await DatabaseManager.getPlayerSchedule(playerId, guildId);
+        if(!games ||  games.length === 0){
+            return null;
+        }
+        let gamesString = "";
+        for(const g of games){
+            let game = toGameObject(g);
+            gamesString += game.toString();
+            gamesString += "\n";
+        }
+        return gamesString;
     }
 
     function toGameObject(dbData){
@@ -96,5 +102,5 @@ const { isMod, isInGame } = require('../utils/permissions_util');
 
 
 module.exports = {
-    scheduleGame, findGame, getGames, reschedule, cancel
+    scheduleGame, findGame, getSchedule, reschedule, cancel
 }

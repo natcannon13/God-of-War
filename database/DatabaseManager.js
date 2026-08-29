@@ -119,21 +119,6 @@ class DatabaseManager{
         }
     }
 
-    async getGames(guildId){
-        let games = null;
-        try{
-            await this._ensureConnected();
-            games = await this.client.db("root-scheduling").collection("matches").find({guildId: guildId});
-        }
-        catch(err){
-            console.error(err);
-        }
-        finally{
-            
-        }
-        return games;
-    }
-
     async getImminentGames(minutes){
         const currentTime = Date.now() / 1000;
         const reminderLead = 60 * minutes;
@@ -162,6 +147,18 @@ class DatabaseManager{
         catch(err){
             console.error(err);
         }
+    }
+
+    async getPlayerSchedule(playerId, guildId){
+        let games = [];
+        try{
+            await this._ensureConnected();
+            games = await this.client.db("root-scheduling").collection("matches").find({players: playerId, guildId: guildId}).toArray();
+        }
+        catch(err){
+            console.error(err);
+        }
+        return games;
     }
 
     async saveConfig(guildId, config){
