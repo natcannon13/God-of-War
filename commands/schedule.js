@@ -47,8 +47,7 @@ async function execute(interaction){
    const player5 = interaction.options.getUser('player5');
    const players = [player1, player2, player3, player4];
    if(player5){
-    player5 = player5.id;
-    players.push(player5);
+    players.push(player5.id);
    }
    const response = await schedule_manager.scheduleGame(interaction.member, interaction.guildId, interaction.channel, time, players)
    return interaction.reply(response);

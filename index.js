@@ -2,20 +2,24 @@ require ('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 const {Client, GatewayIntentBits, ActivityType, Collection, Events, MessageFlags} = require('discord.js');
+const ReminderManager = require('./schedule/ReminderManager');
 
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
-client.on('clientReady', () => {
+client.once(Events.ClientReady, () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  /*client.user.setPresence({
+  client.user.setPresence({
     activities: [{
-      name: "/help message",
+      name: "scheduling",
       type: ActivityType.Custom,
-      state: "Use /help to see commands"
+      state: "Scheduling your next Root game"
     }],
     status: 'online'
-  });*/
+  });
+  ReminderManager.initialize(client).catch((err) => {
+    console.error('Failed to initialize reminders:', err);
+  });
 });
 
 client.commands = new Collection();

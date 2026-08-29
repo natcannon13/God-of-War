@@ -1,6 +1,7 @@
 const {generateId} = require('../utils/id_util');
 const DatabaseManager = require('../database/DatabaseManager');
 const ScheduledGame = require('./ScheduledGame');
+const ReminderManager = require('./ReminderManager');
 const { isMod, isInGame } = require('../utils/permissions_util');
 
     async function scheduleGame(user, guildId, channel, time, players){
@@ -17,11 +18,12 @@ const { isMod, isInGame } = require('../utils/permissions_util');
         try{
             let game = new ScheduledGame(id, channel.id, guildId, time, players);
             await DatabaseManager.scheduleGame(game);
+            ReminderManager.scheduleReminder(game);
             return `Game Scheduled!
         ${game.toString()}`
         } catch (err){
             console.error(err);
-            return (err);
+            return err.message || String(err);
         }
     }
 
@@ -36,7 +38,9 @@ const { isMod, isInGame } = require('../utils/permissions_util');
         else{
             try{
                 await DatabaseManager.reschedule(id, time);
+                ReminderManager.cancelReminder(id);
                 let game = await findGame(id);
+                ReminderManager.scheduleReminder(toGameObject(game));
                 return `Game Rescheduled!\n${toGameObject(game).toString()}`;
             }
             catch(err){
@@ -57,6 +61,7 @@ const { isMod, isInGame } = require('../utils/permissions_util');
         else{
             try{
                 await DatabaseManager.deleteGame(id);
+                ReminderManager.cancelReminder(id);
                 return `Game Canceled!` + toGameObject(game).toString();
             }
             catch(err){
