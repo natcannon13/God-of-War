@@ -1,9 +1,10 @@
 const { shuffle } = require("../utils/shuffle_util");
+const {cats, birds, alliance, lizards, otters, moles, crows, rats, badgers, frogs, bats, knaves} = require("../utils/emoji_util.js");
 
 require ("../utils/shuffle_util.js");
 
-const militants = ["Marquise de Cat", "Eyrie Dynasties", "Underground Duchy", "Lord of the Hundreds", "Keepers in Iron", "Lilypad Diaspora"];
-const insurgents = ["Woodland Alliance", "Lizard Cult", "Riverfolk Company", "Corvid Conspiracy", "Twilight Council", "Knaves of the Deepwood"];
+const militants = [`Marquise de Cat ${cats}`, `Eyrie Dynasties ${birds}`, `Underground Duchy ${moles}`, `Lord of the Hundreds ${rats}`, `Keepers in Iron ${badgers}`, `Lilypad Diaspora ${frogs}`];
+const insurgents = [`Woodland Alliance ${alliance}`, `Lizard Cult ${lizards}`, `Riverfolk Company ${otters}`, `Corvid Conspiracy ${crows}`, `Twilight Council ${bats}`, `Knaves of the Deepwood ${knaves}`];
 
 function generatePool(playerCount){
     let factions = shuffle(militants);
