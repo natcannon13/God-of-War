@@ -67,10 +67,19 @@ class DatabaseManager{
         }
     }
 
-    async changePlayers(id, newPlayers){
+    async substitute(id, oldPlayer, newPlayer){
         try{
             await this._ensureConnected();
-            await this.client.db("root-scheduling").collection("matches").updateOne({_id: id}, {$set : {players: newPlayers}})
+            await this.client.db("root-scheduling").collection("matches").updateOne(
+                {_id: id,
+                    players: oldPlayer
+                },
+                {
+                    $set: {
+                        "players.$" : newPlayer
+                    }
+                }
+            )
         }
         catch(err){
             console.error(err);
@@ -95,7 +104,8 @@ class DatabaseManager{
                 players: game.players,
                 mod: game.mod,
                 tournament: game.tournament,
-                reminderSent: false
+                reminderSent: false,
+                submitted: false
             });
         }
         catch(err){
@@ -116,6 +126,22 @@ class DatabaseManager{
         }
         finally{
             
+        }
+    }
+
+    async cleanCompletedGames(){
+        try{
+            const currentTime = Date.now()/1000;
+            await this._ensureConnected();
+            await this.client.db("root-scheduling").collection("matches").deleteMany({
+                time:{
+                    $lt: currentTime
+                },
+                submitted: true
+            });
+        }
+        catch(err){
+            console.error(err);
         }
     }
 
@@ -152,8 +178,9 @@ class DatabaseManager{
     async getPlayerSchedule(playerId, guildId){
         let games = [];
         try{
+            let currentTime = Date.now() / 1000;
             await this._ensureConnected();
-            games = await this.client.db("root-scheduling").collection("matches").find({players: playerId, guildId: guildId}).toArray();
+            games = await this.client.db("root-scheduling").collection("matches").find({players: playerId, guildId: guildId, time:{$gt: currentTime}}).toArray();
         }
         catch(err){
             console.error(err);

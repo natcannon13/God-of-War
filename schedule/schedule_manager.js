@@ -50,6 +50,28 @@ const { isMod, isInGame } = require('../utils/permissions_util');
         }
     }
 
+    async function substitute(user, id, oldPlayer, newPlayer) {
+        let found = await findGame(id);
+        if(!found){
+            return "No game found with that ID!";
+        }
+        if(!await isMod(found.guildId, user)){
+            return "Only moderators can perform substitutions.";
+        }
+        if(!found.players.includes(oldPlayer)){
+            return "That player is not in this game.";
+        }
+        try{
+            await DatabaseManager.substitute(id, oldPlayer, newPlayer);
+            return `Substitution Successful! <@${newPlayer}> will now play in game ${id}, taking the place of <@${oldPlayer}>!`;
+        }
+        catch(err){
+            console.error(err);
+            return "There was an error making the substitution."
+        }
+
+    }
+
     async function cancel(user, id){
         let game = await findGame(id);
         if(!game){
@@ -102,5 +124,5 @@ const { isMod, isInGame } = require('../utils/permissions_util');
 
 
 module.exports = {
-    scheduleGame, findGame, getSchedule, reschedule, cancel
+    scheduleGame, findGame, getSchedule, reschedule, cancel, substitute
 }

@@ -11,7 +11,7 @@ async function execute(interaction){
     return interaction.reply(`No games found for **${interaction.member.displayName}**!`);
    }
    return interaction.reply({
-    content: `Upcoming games for for **${interaction.member.displayName}**` + scheduleString,
+    content: `Upcoming games for **${interaction.member.displayName}**` + scheduleString,
     allowedMentions: {roles: []}
     });
 }
