@@ -96,7 +96,8 @@ const { isMod, isInGame } = require('../utils/permissions_util');
     async function findGame(id){
         try{
             let game = await DatabaseManager.findGame(id);
-            return game;
+            game = toGameObject(game);
+            return game.toString();
         }
         catch(err){
             console.error(err);

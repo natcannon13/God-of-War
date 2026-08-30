@@ -50,7 +50,10 @@ async function execute(interaction){
     players.push(player5.id);
    }
    const response = await schedule_manager.scheduleGame(interaction.member, interaction.guildId, interaction.channel, time, players)
-   return interaction.reply(response);
+   return ({
+    content: response,
+    allowedMentions: {roles: []}
+   });
 }
 
 module.exports = {
